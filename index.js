@@ -1,26 +1,26 @@
-const { fetchISSFlyOverTimes } = require("./iss");
+const { nextISSTimesForMyLocation } = require("./iss");
 
-// fetchMyIP((error, ip) => {
-//   if (error) {
-//     console.log("It didn't work!" , error);
-//     return;
-//   }
+// this function is taken from compass,
+// it takes in the passTimes array 
+const flyoverTimes = (passTimes) => {
 
-//   console.log('It worked! Returned IP:' , ip);
-// });
+  for (const pass of passTimes) {
+    // set the date and time with to 00:00:00
+    const datetime = new Date(0);
+    // set time to the rise time something like: 11:28:46 GTM+000, etc.
+    datetime.setUTCSeconds(pass.risetime);
+    // duration is set from the pass objects duration property
+    const duration = pass.duration;
 
-// fetchCoordsByIP('50.65.65.64', (e, d) => {
-//   if (e) {
-//     console.log(e);
-//     return;
-//   }
-//   console.log(d);
-// });
+    console.log(`Next pass at ${datetime} for ${duration} seconds!`); 
+  }
+}
 
-// fetchISSFlyOverTimes(
-//   { longitude: -113.4909267, latitude: 53.544389 },
-//   (e, d) => {
-//     console.log(e);
-//     console.log(d);
-//   }
-// );
+nextISSTimesForMyLocation((e, passTimes) => {
+  if (e) {
+    return console.log("It didn't work!", e);
+  }
+
+  // sending passTimes array to flyoverTimes to get printed to console.
+  flyoverTimes(passTimes);
+});
