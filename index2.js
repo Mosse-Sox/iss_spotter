@@ -1,8 +1,5 @@
-const { nextISSTimesForMyLocation } = require("./iss");
+const { nextISSTimesForMyLocation } = require("./iss_promised");
 
-
-// this function is taken from compass,
-// it takes in the passTimes array 
 const flyoverTimes = (passTimes) => {
 
   for (const pass of passTimes) {
@@ -17,11 +14,12 @@ const flyoverTimes = (passTimes) => {
   }
 }
 
-nextISSTimesForMyLocation((e, passTimes) => {
-  if (e) {
-    return console.log("It didn't work!", e);
-  }
+nextISSTimesForMyLocation()
+  .then(passTimes => {
+    flyoverTimes(passTimes);
+  })
+  .catch(error => {
+    console.log("It didn't work: ", error.message);
+  });
 
-  // sending passTimes array to flyoverTimes to get printed to console.
-  flyoverTimes(passTimes);
-});
+
